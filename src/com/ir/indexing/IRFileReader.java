@@ -26,46 +26,92 @@ public class IRFileReader {
 		/*
 		 * STUB for populating the word document magnitude amp
 		 */
-        FileReader inputStream = null;		
-		inputStream = new FileReader(this.getFilePath());
-		Map<String, Magnitude> hm = new HashMap<String,Magnitude>();
-		int count;
-		char letter = '*';
-		char space = ' ';
-        while ((count = inputStream.read()) != -1) {
-        	letter = (char)count;        	
-        	if( letter == '<' ){
-        		letter = (char)(count = inputStream.read());
-        		while(letter != '>'){
-        			letter = (char)(count = inputStream.read());
-        		}
-        	}
-        		
-        		if(Character.isLetter(letter)){
-        			StringBuilder builder = new StringBuilder();
-        			builder.append(Character.toLowerCase(letter));
-        			letter = Character.toLowerCase((char)(count = inputStream.read()));
-        			while(letter != space){
-        				builder.append(letter);
-        				letter = Character.toLowerCase((char)(count = inputStream.read()));        				
-        			}
-        			System.out.println(builder);
-        			if(wordDocumentMagnitudeMap.containsKey(builder.toString())){
-        				
-        				hm = wordDocumentMagnitudeMap.get(builder);
-        				hm.put(builder.toString(), value+1);
-        			}
-        			
-        			if(!(hm.containsKey(builder.toString()))){
-        				hm.put(builder.toString(), 1);
-        			}
-        		}
-        		
-        		}
-        	
-        System.out.print(hm);
-        inputStream.close();
 		
 		
+		    System.out.println("Started reading file");
+			FileReader reader = null;		
+			
+			
+			/*String wordSeparators = WordSeparator.getString("TryingFile.0"); //$NON-NLS-1$
+			String splits[] = wordSeparators.split(",");
+			Set<Character> separatorSet = new HashSet<>();
+			for(String split: splits){
+				separatorSet.add(split.toCharArray()[0]);
+			}*/
+			
+			reader = new FileReader(this.getFilePath()); //$NON-NLS-1$
+			System.out.println("File Name:"+this.getFilePath());
+			
+			int c;
+			boolean skippingCondition = false;
+			StringBuilder builder = new StringBuilder();
+			while((c=reader.read())!=-1){
+				if(c=='<'){
+					skippingCondition = true;
+					continue;
+				}
+				else{
+					if(skippingCondition){
+						if(c=='>'){
+							// to check style tags
+							if(builder.toString().startsWith("style")){
+								skippingCondition = true;
+								builder = new StringBuilder();
+							}
+							else {
+								skippingCondition = false;
+							}
+							continue;
+						}
+						else{
+							builder.append(c);
+							continue;
+						}
+					}
+					else{
+						if(c==' ' || c=='\n' || c=='<' || c==',' || c==';' || c=='{' || c=='}' || c==':' || c=='?' || c=='['
+								|| c==']' || c=='-' || c=='_' || c=='+' || c=='=' || c=='!' || c=='(' || c==')')
+						{
+							if(c=='<'){
+								skippingCondition = true;
+								continue;
+							}
+							else if(builder.toString().equals(" ") || builder.length()==0){
+								continue;
+							}
+							
+							if(!skippingCondition){
+								if(!wordDocumentMagnitudeMap.containsKey(builder.toString())){
+									Map<String, Magnitude> map = new HashMap<String, Magnitude>();
+									Magnitude magnitude = new Magnitude();
+									magnitude.setTf(1);
+									map.put(this.getFilePath(), magnitude);
+									wordDocumentMagnitudeMap.put(builder.toString().toLowerCase(), map);
+									System.out.println(""+builder.toString());
+									System.out.println(""+magnitude.getTf());
+								}
+								else {
+									Map<String, Magnitude> map = wordDocumentMagnitudeMap.get(builder.toString());
+									if(!map.containsKey(this.getFilePath())){
+										map.put(this.getFilePath(), new Magnitude());
+									}
+									Magnitude tempMagnitude = map.get(this.getFilePath());
+									long tempTfCount = tempMagnitude.getTf();								
+									tempMagnitude.setTf(tempTfCount+1);							
+									System.out.println(""+builder.toString());
+									System.out.println(""+tempMagnitude.getTf());
+								}
+							}
+							builder = new StringBuilder();
+						}
+						else{
+							builder.append((char)c);
+						}
+					}
+				}
+			}
+		//System.out.println(wordDocumentMagnitudeMap);
+		
+		reader.close();
 	}
 }

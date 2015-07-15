@@ -76,7 +76,7 @@ public class FileIndexer {
 				lookThroughDirectory(f.getPath());
 			}
 			else{
-				System.out.println(f.getAbsolutePath());
+				//System.out.println(f.getAbsolutePath());
 				fileNames.add(f.getAbsolutePath());
 			}
 				
