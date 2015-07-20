@@ -13,7 +13,8 @@ public class FileIndexer {
 
 	private String directoryPath;
 	private List<String> fileNames;
-	Map<String, Map<String, Magnitude>> wordDocumentMagnitudeMap;
+	Map<String, Magnitude> wordDocumentMagnitudeMap;
+	long totalDocs = 0;
 	
 	public FileIndexer(String directoryPath) {
 		super();
@@ -68,9 +69,9 @@ public class FileIndexer {
 		
 		File file = new File(directoryName);
 		File files[] = file.listFiles();
+		totalDocs += files.length;
 		System.out.println(files.length+" is size");
-		for(File f: files){
-			
+		for(File f: files){			
 			if(f.isDirectory()){
 				System.out.println("found a directory"+f.getName());
 				lookThroughDirectory(f.getPath());

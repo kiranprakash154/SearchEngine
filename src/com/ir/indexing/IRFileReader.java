@@ -22,7 +22,7 @@ public class IRFileReader {
 		this.filePath = filePath;
 	}
 
-	public void populateMagnitudeData(Map<String, Map<String, Magnitude>> wordDocumentMagnitudeMap) throws IOException{
+	public void populateMagnitudeData(Map<String, Magnitude> wordDocumentMagnitudeMap) throws IOException{
 		/*
 		 * STUB for populating the word document magnitude amp
 		 */
@@ -44,7 +44,7 @@ public class IRFileReader {
 
 		int c;
 		boolean skippingCondition = false;
-		boolean commentCondition = false;
+	//	boolean commentCondition = false;
 		StringBuilder builder = new StringBuilder();
 		while((c=reader.read())!=-1){
 			//System.out.print((char)c);
@@ -124,32 +124,62 @@ public class IRFileReader {
 		reader.close();
 	}
 
-	private void saveWord(Map<String, Map<String, Magnitude>> wordDocumentMagnitudeMap, StringBuilder builder) {
+	private void saveWord(Map<String, Magnitude> wordDocumentMagnitudeMap, StringBuilder builder) {
 		if(builder.toString().equals("") ||  builder.toString().equals(" ")){
 			return;
 		}
-		if(!wordDocumentMagnitudeMap.containsKey(builder.toString())){
-			Map<String, Magnitude> map = new HashMap<String, Magnitude>();
+		
+		if(!wordDocumentMagnitudeMap.containsKey(builder.toString().toLowerCase())){ // IF we do not have the word
 			Magnitude magnitude = new Magnitude();
-			magnitude.setTf(1);
-			map.put(this.getFilePath(), magnitude);
-
-			wordDocumentMagnitudeMap.put(builder.toString().toLowerCase(), map);
-			//System.out.println("Now displaying contents of Hashmap");
-			System.out.println(""+builder.toString().toLowerCase());
-			System.out.println(""+magnitude.getTf());
+			magnitude.setTf(this.getFilePath(), 1);
+			magnitude.setDf(1);
+			wordDocumentMagnitudeMap.put(builder.toString().toLowerCase(), magnitude);			
 		}
-		else {
-			Map<String, Magnitude> map = wordDocumentMagnitudeMap.get(builder.toString());
-			if(!map.containsKey(this.getFilePath())){
-				map.put(this.getFilePath(), new Magnitude());
-			}
-			Magnitude tempMagnitude = map.get(this.getFilePath());
-			long tempTfCount = tempMagnitude.getTf();								
-			tempMagnitude.setTf(tempTfCount+1);			
+			
+			
+			
+			
+			
+//			Map<String, Magnitude> map = new HashMap<String, Magnitude>();
+//			Magnitude magnitude = new Magnitude();
+//			magnitude.setTf(1);
+//			magnitude.setDf(1);
+//			map.put(this.getFilePath(), magnitude);
+//
+//			wordDocumentMagnitudeMap.put(builder.toString().toLowerCase(), map);
 			//System.out.println("Now displaying contents of Hashmap");
-			System.out.println(""+builder.toString().toLowerCase());
-			System.out.println(""+tempMagnitude.getTf());
+			//System.out.println(""+builder.toString().toLowerCase());
+			//System.out.println(""+magnitude.getTf());
+		
+		else { // If we do have the word
+			Magnitude tempMagnitude = wordDocumentMagnitudeMap.get(builder.toString().toLowerCase());			
+			HashMap<String, Long> tempMap = tempMagnitude.getTf();
+			
+			if(tempMap.containsKey(this.getFilePath())){ // If we have the file in the map then update the tf count
+				tempMagnitude.incrementTF(this.getFilePath());
+//				long tempCount = tempMap.get(this.getFilePath());
+//				tempMap.put(this.getFilePath(), ++tempCount);
+			}
+			else{ // If we do not have the file in the map then update the map and increment the Df
+				tempMagnitude.setTf(this.getFilePath(), 1);				
+				tempMagnitude.incrementDF();
+				
+			}
+				
+				
+//			}
+//			Map<String, Magnitude> map = wordDocumentMagnitudeMap.get(builder.toString());
+//			if(!map.containsKey(this.getFilePath())){
+//				map.put(this.getFilePath(), new Magnitude());
+//			}
+//			Magnitude tempMagnitude = map.get(this.getFilePath());
+//			long tempTfCount = tempMagnitude.getTf();								
+//			tempMagnitude.setTf(tempTfCount+1);		
+			
+			
+			//System.out.println("Now displaying contents of Hashmap");
+		    //System.out.println(""+builder.toString().toLowerCase());
+			//System.out.println(""+tempMagnitude.getTf());
 		}
 	}
 }
