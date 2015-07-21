@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.ir.entity.Magnitude;
+import com.ir.vectorSpacing.DocumentWordVector;
 
 public class FileIndexer {
 
 	private String directoryPath;
 	private List<String> fileNames;
 	Map<String, Magnitude> wordDocumentMagnitudeMap;
+	Map<String,DocumentWordVector> documentWordVectorMap;
 	long totalDocs = 0;
 	
 	public FileIndexer(String directoryPath) {
@@ -21,6 +23,7 @@ public class FileIndexer {
 		this.directoryPath = directoryPath;
 		this.fileNames = new ArrayList<>();
 		this.wordDocumentMagnitudeMap = new HashMap<>();
+		this.documentWordVectorMap = new HashMap<String , DocumentWordVector>();
 	}
 	public String getDirectoryPath() {
 		return directoryPath;
@@ -53,7 +56,7 @@ public class FileIndexer {
 		Magnitude.setTotalDocs(totalDocs);
 		for(String file: fileNames){
 			IRFileReader reader = new IRFileReader(file);
-			reader.populateMagnitudeData(wordDocumentMagnitudeMap);
+			reader.populateMagnitudeData(wordDocumentMagnitudeMap,documentWordVectorMap);
 		}
 	}
 	

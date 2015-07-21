@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import com.ir.entity.Magnitude;
+import com.ir.vectorSpacing.DocumentWordVector;
 
 public class IRFileReader {
 	String filePath;
@@ -24,7 +25,7 @@ public class IRFileReader {
 		this.filePath = filePath;
 	}
 
-	public void populateMagnitudeData(Map<String, Magnitude> wordDocumentMagnitudeMap) throws IOException{
+	public void populateMagnitudeData(Map<String, Magnitude> wordDocumentMagnitudeMap,Map<String, DocumentWordVector> documentWordVectorMap) throws IOException{
 		/*
 		 * STUB for populating the word document magnitude amp
 		 */
@@ -48,6 +49,16 @@ public class IRFileReader {
 		boolean skippingCondition = false;
 	//	boolean commentCondition = false;
 		StringBuilder builder = new StringBuilder();
+		
+		// add the existing file to the map
+		
+		  documentWordVectorMap.put(this.getFilePath(), new DocumentWordVector());
+		  DocumentWordVector wordCountMapObj = documentWordVectorMap.get(this.getFilePath());
+		  HashMap<String,Integer> wordCountMap = wordCountMapObj.getWordCount();
+		
+		
+		
+		
 		while((c=reader.read())!=-1){
 			//System.out.print((char)c);
 			if(c=='<')
@@ -62,6 +73,7 @@ public class IRFileReader {
 				
 				else{
 					saveWord(wordDocumentMagnitudeMap, builder);
+					saveDocumentVector(wordCountMap,builder);
 				}
 				skippingCondition = true;
 
@@ -106,7 +118,7 @@ public class IRFileReader {
 					if(!skippingCondition){								
 						
 						saveWord(wordDocumentMagnitudeMap, builder);
-						
+						saveDocumentVector(wordCountMap,builder);
 
 
 					}
@@ -122,9 +134,23 @@ public class IRFileReader {
 			}
 		}
 		//System.out.println(wordDocumentMagnitudeMap);
-
+		wordCountMapObj.setWordCount(wordCountMap);
 		reader.close();
 	}
+
+	private void saveDocumentVector(HashMap<String,Integer> wordCountMap, StringBuilder builder) {
+		if(builder.toString().equals("") ||  builder.toString().equals(" ")){
+			return;
+		}
+		if(!wordCountMap.containsKey(builder.toString().toLowerCase())){ // If the word is not present then add it with count 1
+			wordCountMap.put(builder.toString().toLowerCase(), 1);
+		}
+		else{
+			wordCountMap.put(  builder.toString(),(wordCountMap.get(builder.toString().toLowerCase())) +1   );
+		}
+		
+	}
+
 
 	private void saveWord(Map<String, Magnitude> wordDocumentMagnitudeMap, StringBuilder builder) {
 		if(builder.toString().equals("") ||  builder.toString().equals(" ")){
@@ -138,10 +164,6 @@ public class IRFileReader {
 			magnitude.setIdf(Magnitude.getTotalDocs(),1);
 			wordDocumentMagnitudeMap.put(builder.toString().toLowerCase(), magnitude);			
 		}
-			
-			
-			
-			
 			
 //			Map<String, Magnitude> map = new HashMap<String, Magnitude>();
 //			Magnitude magnitude = new Magnitude();
@@ -168,9 +190,7 @@ public class IRFileReader {
 				tempMagnitude.incrementDF();
 				
 				
-			}
-				
-				
+			}				
 //			}
 //			Map<String, Magnitude> map = wordDocumentMagnitudeMap.get(builder.toString());
 //			if(!map.containsKey(this.getFilePath())){
