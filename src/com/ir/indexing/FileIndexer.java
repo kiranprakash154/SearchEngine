@@ -50,6 +50,7 @@ public class FileIndexer {
 	
 	private void readFromFiles() throws IOException {
 		// threads
+		Magnitude.setTotalDocs(totalDocs);
 		for(String file: fileNames){
 			IRFileReader reader = new IRFileReader(file);
 			reader.populateMagnitudeData(wordDocumentMagnitudeMap);

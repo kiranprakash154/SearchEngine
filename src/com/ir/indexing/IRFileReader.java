@@ -12,10 +12,12 @@ public class IRFileReader {
 	public String getFilePath() {
 		return filePath;
 	}
+	
 
 	public IRFileReader(String filePath) {
 		super();
 		this.filePath = filePath;
+		
 	}
 
 	public void setFilePath(String filePath) {
@@ -133,6 +135,7 @@ public class IRFileReader {
 			Magnitude magnitude = new Magnitude();
 			magnitude.setTf(this.getFilePath(), 1);
 			magnitude.setDf(1);
+			magnitude.setIdf(Magnitude.getTotalDocs(),1);
 			wordDocumentMagnitudeMap.put(builder.toString().toLowerCase(), magnitude);			
 		}
 			
@@ -163,6 +166,7 @@ public class IRFileReader {
 			else{ // If we do not have the file in the map then update the map and increment the Df
 				tempMagnitude.setTf(this.getFilePath(), 1);				
 				tempMagnitude.incrementDF();
+				
 				
 			}
 				
