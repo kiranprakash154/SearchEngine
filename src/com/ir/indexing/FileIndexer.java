@@ -53,8 +53,11 @@ public class FileIndexer {
 		String file2 = fileNames.get(1);
 		Map<String,Magnitude> firstDocMap = documentWordMagnitudeMap.get(file1);
 		Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
-
-		DocumentSimilarity.DocumentSimilarityFunc(firstDocMap, secDocMap);
+		System.out.println("Now calculating Document similarity of: ");
+		System.out.println(file1);
+		System.out.println(file2);
+		double result = DocumentSimilarity.DocumentSimilarityFunc(firstDocMap, secDocMap);
+		System.out.println("Result:"+result);
 	}
 	
 	private void readFromFiles() throws IOException {
