@@ -1,16 +1,24 @@
 package com.ir.entity;
 
-import java.util.HashMap;
-
 public class Magnitude {
-	HashMap<String, Long> tf;
+	long tf;
 	long df;
 	double idf;
     static long totalDocs;
+    
+//    public Magnitude() {
+//		super();
+//	}
+    
 	
-	public HashMap<String , Long> getTf() {
+	public long getTf() {
 		return tf;
 	}
+	
+	public void setTf(long tf) {
+		this.tf = tf;
+	}
+	
 	public static void setTotalDocs(long totalDocs ){
 	Magnitude.totalDocs = totalDocs;
 	}
@@ -18,10 +26,8 @@ public class Magnitude {
 		return  Magnitude.totalDocs;
 	}
 	
-	public void setTf(String fileName, long tf) {
-		HashMap<String, Long> tempMap = this.getTf();
-		tempMap.put(fileName, tf);
-	}
+	
+	
 	public long getDf() {
 		return df;
 	}
@@ -46,15 +52,15 @@ public class Magnitude {
 		
 	}
 
-	private void updateIDF() {
-		this.setIdf(Magnitude.totalDocs, this.getIdf());
+	public void updateIDF() {
+		this.setIdf(Magnitude.totalDocs, this.getDf());
 		
 	}
 
-	public void incrementTF(String fileName) {
-		HashMap<String, Long> tempMap = this.getTf();
-		long tempTFCount = tempMap.get(fileName);
-		tempMap.put(fileName, ++tempTFCount);
-		this.setTf(fileName, tempTFCount+1);
-	}
+//	public void incrementTF(String fileName) {
+//		HashMap<String, Long> tempMap = this.getTf();
+//		long tempTFCount = tempMap.get(fileName);
+//		tempMap.put(fileName, ++tempTFCount);
+//		this.setTf(fileName, tempTFCount+1);
+//	}
 }

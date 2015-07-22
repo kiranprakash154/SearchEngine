@@ -7,23 +7,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ir.DocumentSimilarity.DocumentSimilarity;
 import com.ir.entity.Magnitude;
-import com.ir.vectorSpacing.DocumentWordVector;
 
 public class FileIndexer {
 
 	private String directoryPath;
 	private List<String> fileNames;
-	Map<String, Magnitude> wordDocumentMagnitudeMap;
-	Map<String,DocumentWordVector> documentWordVectorMap;
+	Map<String, Map<String,Magnitude>> wordDocumentMagnitudeMap;
+	Map<String, Map<String,Magnitude>> documentWordMagnitudeMap;
 	long totalDocs = 0;
 	
 	public FileIndexer(String directoryPath) {
 		super();
 		this.directoryPath = directoryPath;
 		this.fileNames = new ArrayList<>();
-		this.wordDocumentMagnitudeMap = new HashMap<>();
-		this.documentWordVectorMap = new HashMap<String , DocumentWordVector>();
+		this.wordDocumentMagnitudeMap = new HashMap<String, Map<String,Magnitude>>();
+		this.documentWordMagnitudeMap = new HashMap<String, Map<String,Magnitude>>();
 	}
 	public String getDirectoryPath() {
 		return directoryPath;
@@ -49,6 +49,12 @@ public class FileIndexer {
 		
 		readFromFiles();
 		System.out.println("done reading files");
+		String file1 = fileNames.get(0);
+		String file2 = fileNames.get(1);
+		Map<String,Magnitude> firstDocMap = documentWordMagnitudeMap.get(file1);
+		Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
+
+		DocumentSimilarity.DocumentSimilarityFunc(firstDocMap, secDocMap);
 	}
 	
 	private void readFromFiles() throws IOException {
@@ -56,7 +62,7 @@ public class FileIndexer {
 		Magnitude.setTotalDocs(totalDocs);
 		for(String file: fileNames){
 			IRFileReader reader = new IRFileReader(file);
-			reader.populateMagnitudeData(wordDocumentMagnitudeMap,documentWordVectorMap);
+ 			reader.populateMagnitudeData(wordDocumentMagnitudeMap,documentWordMagnitudeMap);
 		}
 	}
 	
@@ -75,6 +81,7 @@ public class FileIndexer {
 		File files[] = file.listFiles();
 		totalDocs += files.length;
 		System.out.println(files.length+" is size");
+		System.out.println("Total Documents"+totalDocs);
 		for(File f: files){			
 			if(f.isDirectory()){
 				System.out.println("found a directory"+f.getName());
