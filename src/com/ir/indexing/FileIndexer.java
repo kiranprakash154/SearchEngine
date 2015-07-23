@@ -3,9 +3,11 @@ package com.ir.indexing;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.ir.DocumentSimilarity.DocumentSimilarity;
 import com.ir.entity.Magnitude;
@@ -16,6 +18,8 @@ public class FileIndexer {
 	private List<String> fileNames;
 	Map<String, Map<String,Magnitude>> wordDocumentMagnitudeMap;
 	Map<String, Map<String,Magnitude>> documentWordMagnitudeMap;
+	TreeMap<Double,List<String>> resultMap;
+	List<String> similarFiles;
 	long totalDocs = 0;
 	
 	public FileIndexer(String directoryPath) {
@@ -24,6 +28,8 @@ public class FileIndexer {
 		this.fileNames = new ArrayList<>();
 		this.wordDocumentMagnitudeMap = new HashMap<String, Map<String,Magnitude>>();
 		this.documentWordMagnitudeMap = new HashMap<String, Map<String,Magnitude>>();
+		this.resultMap = new TreeMap<Double,List<String>>(Collections.reverseOrder());
+		this.similarFiles = new ArrayList<String>();
 	}
 	public String getDirectoryPath() {
 		return directoryPath;
@@ -49,15 +55,26 @@ public class FileIndexer {
 		
 		readFromFiles();
 		System.out.println("done reading files");
-		String file1 = fileNames.get(0);
-		String file2 = fileNames.get(1);
-		Map<String,Magnitude> firstDocMap = documentWordMagnitudeMap.get(file1);
-		Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
-		System.out.println("Now calculating Document similarity of: ");
-		System.out.println(file1);
-		System.out.println(file2);
-		double result = DocumentSimilarity.DocumentSimilarityFunc(firstDocMap, secDocMap);
-		System.out.println("Result:"+result);
+		
+		
+		Map<String,Magnitude> userDocMap = DocumentSimilarity.userQuery();
+		for(int i=0;i<fileNames.size();i++){
+			String file2 = fileNames.get(i);
+			Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
+			double result = DocumentSimilarity.DocumentSimilarityFunc(userDocMap, secDocMap);
+			this.resultMap = DocumentSimilarity.addToResultsMap(resultMap,result,file2);
+		}
+	
+		this.similarFiles = DocumentSimilarity.displayFiles(this.similarFiles,resultMap,10);
+		System.out.println(this.similarFiles);
+//		String file1 = fileNames.get(0);
+		
+//		
+//		System.out.println("Now calculating Document similarity of: ");
+//		System.out.println(file1);
+//		System.out.println(file2);
+//		
+//		System.out.println("Result:"+result);
 	}
 	
 	private void readFromFiles() throws IOException {

@@ -18,7 +18,9 @@ public class Magnitude {
 	public void setTf(long tf) {
 		this.tf = tf;
 	}
-	
+	public void incrementTF() {
+		this.tf = this.getTf()+1;		
+	}
 	public static void setTotalDocs(long totalDocs ){
 	Magnitude.totalDocs = totalDocs;
 	}
