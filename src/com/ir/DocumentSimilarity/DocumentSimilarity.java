@@ -39,7 +39,7 @@ public class DocumentSimilarity {
 		
 	}
 	
-	public static double DocumentSimilarityFunc(Map<String, Magnitude> firstDocMap,Map<String, Magnitude> secDocMap){
+	public static double DocumentSimilarityFunc(Map<String, Magnitude> firstDocMap,Map<String, Magnitude> secDocMap, int i){
 //		 List<Long> firstDoc = new ArrayList<Long>();
 //		 List<Long> secDoc = new ArrayList<Long>();
 		
@@ -50,11 +50,15 @@ public class DocumentSimilarity {
 		 Double result = (double) 0;
 		 
 		 //Reading from the first doc
+		 
+		 
 		 for (Map.Entry<String, Magnitude> entry : firstDocMap.entrySet()) {
 			    String key = entry.getKey();
 			    long value1 = entry.getValue().getTf();
+			    if(i==2){value1 = value1 * entry.getValue().getDf();} // tf * idf
 			    if(secDocMap.containsKey(key)){
 			    	long value2 = secDocMap.get(key).getTf();
+			    	 if(i==2){value2 = value2 * secDocMap.get(key).getDf();}  // tf * idf
 			    	numerator += value1 * value2;
 			    }
 			    else{
@@ -72,6 +76,8 @@ public class DocumentSimilarity {
 		 result = numerator / entiredenominator;
 		 return result;
 	}
+	
+	
 	public static TreeMap<Double, List<String>> addToResultsMap(TreeMap<Double, List<String>> resultMap, double result,String fileName){
 		if(!resultMap.containsKey(result)){
 			List<String> files = new ArrayList<String>(); 

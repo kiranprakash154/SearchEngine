@@ -61,7 +61,7 @@ public class FileIndexer {
 		for(int i=0;i<fileNames.size();i++){
 			String file2 = fileNames.get(i);
 			Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
-			double result = DocumentSimilarity.DocumentSimilarityFunc(userDocMap, secDocMap);
+			double result = DocumentSimilarity.DocumentSimilarityFunc(userDocMap, secDocMap,1);
 			this.resultMap = DocumentSimilarity.addToResultsMap(resultMap,result,file2);
 		}
 	
