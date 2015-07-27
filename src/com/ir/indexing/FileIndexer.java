@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import com.ir.DocumentSimilarity.DocumentSimilarity;
 import com.ir.entity.Magnitude;
+import com.ir.kmeans.KmeansCluster;
 
 public class FileIndexer {
 
@@ -67,6 +68,9 @@ public class FileIndexer {
 	
 		this.similarFiles = DocumentSimilarity.displayFiles(this.similarFiles,resultMap,10);
 		System.out.println(this.similarFiles);
+		
+		KmeansCluster.cluster(documentWordMagnitudeMap,fileNames, 3);
+		System.out.println("Done with Clusters");
 //		String file1 = fileNames.get(0);
 		
 //		
