@@ -58,18 +58,18 @@ public class FileIndexer {
 		System.out.println("done reading files");
 		
 		
-		Map<String,Magnitude> userDocMap = DocumentSimilarity.userQuery();
-		for(int i=0;i<fileNames.size();i++){
-			String file2 = fileNames.get(i);
-			Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
-			double result = DocumentSimilarity.DocumentSimilarityFunc(userDocMap, secDocMap,1);
-			this.resultMap = DocumentSimilarity.addToResultsMap(resultMap,result,file2);
-		}
-	
-		this.similarFiles = DocumentSimilarity.displayFiles(this.similarFiles,resultMap,10);
-		System.out.println(this.similarFiles);
+//		Map<String,Magnitude> userDocMap = DocumentSimilarity.userQuery();
+//		for(int i=0;i<fileNames.size();i++){
+//			String file2 = fileNames.get(i);
+//			Map<String,Magnitude> secDocMap = documentWordMagnitudeMap.get(file2);
+//			double result = DocumentSimilarity.DocumentSimilarityFunc(userDocMap, secDocMap,1);
+//			this.resultMap = DocumentSimilarity.addToResultsMap(resultMap,result,file2);
+//		}
+//	
+//		this.similarFiles = DocumentSimilarity.displayFiles(this.similarFiles,resultMap,10);
+//		System.out.println(this.similarFiles);
 		
-		KmeansCluster.cluster(documentWordMagnitudeMap,fileNames, 3);
+		KmeansCluster.intializeClusters(documentWordMagnitudeMap,fileNames, 3);
 		System.out.println("Done with Clusters");
 //		String file1 = fileNames.get(0);
 		
