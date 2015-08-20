@@ -1,7 +1,6 @@
 package com.ir.main;
 
 import java.io.IOException;
-
 import com.ir.indexing.FileIndexer;
 
 public class Main {
@@ -10,5 +9,7 @@ public class Main {
 		System.out.println("Starting search engine");
 		FileIndexer fileIndexer = new FileIndexer("/media/kiran/Games/IR/Projectclass/result3/");
 		fileIndexer.startIndexing();
+		
+		
 	}
 }
